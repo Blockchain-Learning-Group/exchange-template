@@ -57,15 +57,55 @@ function loadWeb3() {
   }
 }
 
-/**
- * Open the successful transaction modal
- * @param  {String} tx The transaction hash.
+/*
+ Utils
  */
+
+/**
+ * Append a new order to the order book table.
+ * @param  {String} maker  The address of the user who created the order.
+ * @param  {String} offerToken  The address of the token contract offered.
+ * @param  {Number} offerAmount The amount of tokens offered.
+ * @param  {String} wantToken  The address of the token contract wanted.
+ * @param  {Number} wantAmount The amount of tokens wanted.
+ * when offering ether to transfer the value to the exchange to broker the trade.
+ */
+function appendOrder(maker, offerToken, offerAmount, wantToken, wantAmount) {
+   const offerSymbol = tokenAddressToSymbol[offerToken]
+   const wantSymbol = tokenAddressToSymbol[wantToken]
+   let offerAmountAdjusted = offerAmount
+   let wantAmountAdjusted = wantAmount
+
+   // Convert eth amount from wei
+   if (offerSymbol === 'ETH') {
+     offerAmountAdjusted = offerAmount / 10**18
+   } else if (wantSymbol === 'ETH') {
+     wantAmountAdjusted = wantAmount / 10**18
+   }
+
+   $('#orderBook').append(
+     '<tr id='
+       // Sufficient ID for now as only one order can exist with these params at this time.
+       + offerToken + offerAmount + wantToken + wantAmount
+       +' ><td>'
+       + offerSymbol + '</td><td>'
+       + offerAmountAdjusted + '</td><td>'
+       + wantSymbol + '</td><td>'
+       + wantAmountAdjusted + '</td><td>'
+       + maker
+     + '</td><</tr>'
+   )
+ }
+
+/**
+* Open the successful transaction modal
+* @param  {String} tx The transaction hash.
+*/
 function openTransactionSuccessModal(msg, tx) {
-  const href = 'https://kovan.etherscan.io/tx/' + tx
-  $('#txHash').empty()
-  $('#txHash').append('<p>'+ msg +'</p>')
-  $('#txHash').append('</br><p>Here is your transaction hash:</p>')
-  $('#txHash').append('<a href='+ href +'>'+ tx +'</a>')
-  $('#successModal').modal('show')
+ const href = 'https://kovan.etherscan.io/tx/' + tx
+ $('#txHash').empty()
+ $('#txHash').append('<p>'+ msg +'</p>')
+ $('#txHash').append('</br><p>Here is your transaction hash:</p>')
+ $('#txHash').append('<a href='+ href +'>'+ tx +'</a>')
+ $('#successModal').modal('show')
 }
