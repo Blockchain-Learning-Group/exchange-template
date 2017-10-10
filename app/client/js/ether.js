@@ -47,13 +47,13 @@ function loadWeb3() {
   const web3 = new Web3(window.web3.currentProvider) // Metamask
 
   if (web3.isConnected()) {
+    window.defaultAccount = web3.eth.accounts[0] 
+   
     // Create instance of the exchange, blg token and hub
 
     // Create relevant listeners for all contracts
 
     // Load balances for the user as well as the order book contents
-
-    window.defaultAccount = web3.eth.accounts[0]
   }
 }
 
